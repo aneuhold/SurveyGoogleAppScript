@@ -37,7 +37,6 @@ const questionsToShowOnOutput = {
 // Different sets of questions for different courses.
 // These need to be declared before the place where they are used below.
 const ser315Questions = [
-  'test',
   'Attended meetings',
   'Communicated professionally',
   'Participated in group discussions',

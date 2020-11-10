@@ -57,10 +57,10 @@ function getFormItemForStudent(studentName) {
 // ----- FormResponse FUNCTIONS ----- //
 
 /**
-* Gets all of the respones from the form.
-*
-* @returns {FormResponse[]} the responses. One for each submitter.
-* */
+ * Gets all of the respones from the form.
+ * @returns {GoogleAppsScript.Forms.FormResponse[]} the responses. One for each
+ * submitter.
+ */
 function getResponses() {
   return getForm().getResponses();
 }
@@ -83,10 +83,11 @@ function logResponses() {
 // ----- Form FUNCTIONS ----- //
 
 /**
-* Gets the form that should be used to update and collect data from once responses are submitted.
-*
-* @returns {Form} the form with the ID specified at the beginning of the script.
-* */
+ * Gets the form that should be used to update and collect data from once
+ * responses are submitted.
+ * @returns {GoogleAppsScript.Forms.Form} the form with the ID specified at
+ * the beginning of the script.
+ */
 function getForm() {
   return FormApp.openById(formID); // ID for the survey
 }
