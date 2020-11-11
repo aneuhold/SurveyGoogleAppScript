@@ -15,8 +15,8 @@ function clearConfig() {
       let endFound = false;
       while (!endFound && currentRow <= numRows) {
         const currentCell = peerQuestionsRange.getCell(currentRow, 1);
-        if (currentCell.getValue() !== ''
-        || currentCell.getValue() !== 'Please keep this text here to identify the end of the questions') {
+        if (currentCell.getValue() === ''
+        || currentCell.getValue() === 'Please keep this text here to identify the end of the questions') {
           endFound = true;
         } else {
           currentCell.clearContent();
