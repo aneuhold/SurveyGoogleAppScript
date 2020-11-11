@@ -57,7 +57,8 @@ function getFormItemForStudent(studentName) {
 // ----- FormResponse FUNCTIONS ----- //
 
 /**
- * Gets all of the respones from the form.
+ * Gets all of the responses from the form.
+ *
  * @returns {GoogleAppsScript.Forms.FormResponse[]} the responses. One for each
  * submitter.
  */
@@ -95,12 +96,25 @@ function getForm() {
 // ----- Sheet FUNCTIONS ----- //
 
 /**
-* Gets the sheet where the teams and team members are, this should be the sheet
-* that is associated with this script.
-* */
+ * Gets the sheet where the teams and team members are, this should be the
+ * spreadsheet that is associated with this script.
+ *
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet} the sheet labeled "Teams"
+ */
 function getTeamsSheet() {
   const ss = SpreadsheetApp.getActive();
   return ss.getSheetByName('Teams'); // name of the sheet to read
+}
+
+/**
+ * Gets the sheet where the config is, this should be the spreadsheet that is
+ * associated with this script.
+ *
+ * @returns {GoogleAppsScript.Spreadsheet.Sheet} the sheet labeled "Config"
+ */
+function getConfigSheet() {
+  const ss = SpreadsheetApp.getActive();
+  return ss.getSheetByName('Config');
 }
 
 // ----- Item FUNCTIONS ----- //
