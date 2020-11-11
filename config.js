@@ -1,5 +1,5 @@
 /**
-* The ID of the Google Forms form to be used as the survey.
+*
 * */
 const formID = '1gpGdOSDp9FgDnRLOqujxlDkXa_CulhhTzEEe0dQboOY';
 

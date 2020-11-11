@@ -90,7 +90,7 @@ function logResponses() {
  * the beginning of the script.
  */
 function getForm() {
-  return FormApp.openById(formID); // ID for the survey
+  return FormApp.openById(config.formID); // ID for the survey
 }
 
 // ----- Sheet FUNCTIONS ----- //

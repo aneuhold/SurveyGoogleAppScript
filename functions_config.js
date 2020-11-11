@@ -1,4 +1,17 @@
 /**
+ * Used for the config variable.
+ *
+ * @typedef Config
+ * @type {{
+ *  asuIdQuestionTitle: string,
+ *  peerQuestions: string[],
+ *  title: string,
+ *  formId: string,
+ *  studentGradingSectionTitle: string
+ * } | null}
+ */
+
+/**
  * Clears the "Config" sheet of set values.
  */
 function clearConfig() {
@@ -26,6 +39,72 @@ function clearConfig() {
     } else {
       // Only clear the content, not the formatting
       namedRange.getRange().clearContent();
+    }
+  });
+}
+
+/**
+ * The object holding the different configuration variables for the scripts
+ * on this spreadsheet.
+ *
+ * @type {Config}
+ */
+let config = null;
+
+/**
+ * Gets the config object by either retriveing values from the "Config" sheet,
+ * or using the values already generated from that in this run.
+ */
+function getConfig() {
+  if (config === null) {
+    populateConfigFromSheet();
+  }
+  return config;
+}
+
+function populateConfigFromSheet() {
+  const configSheet = getConfigSheet();
+  const namedRanges = configSheet.getNamedRanges();
+  config = {};
+  namedRanges.forEach((namedRange) => {
+    if (namedRange.getName() === 'peerQuestions') {
+      const peerQuestionsRange = namedRange.getRange();
+
+      // Loop through each range and collect the ones that don't have nothing,
+      // or the last separator statement.
+      const numRows = peerQuestionsRange.getHeight();
+      let currentRow = 1;
+      let endFound = false;
+      config.peerQuestions = [];
+      while (!endFound && currentRow <= numRows) {
+        const currentCellValue = peerQuestionsRange.getCell(currentRow, 1).getValue();
+        if (currentCellValue === ''
+        || currentCellValue === 'Please keep this text here to identify the end of the questions') {
+          endFound = true;
+        } else {
+          config.peerQuestions.push(currentCellValue);
+          currentRow++;
+        }
+      }
+      return;
+    }
+
+    // For all other cases
+    const cellValue = namedRange.getRange().getValue();
+    switch (namedRange.getName()) {
+      case 'asuIdQuestionTitle':
+        config.asuIdQuestionTitle = cellValue;
+        break;
+      case 'title':
+        config.formTitle = cellValue;
+        break;
+      case 'formId':
+        config.asuIdQuestionTitle = cellValue;
+        break;
+      case 'studentGradingSectionTitle':
+        config.studentGradingSectionTitle = cellValue;
+        break;
+      default:
     }
   });
 }

@@ -23,6 +23,9 @@
 /**
  * Backlog as of 11/9/2020:
  *
+ * - Convert the class that you made into something more functional. Classes
+ * aren't going to work.
+ *
  * - Maybe ask the group before the name and then have the select of asurite in
  * the group section with only the group members to select from
  * - Include a thing that says “yes” you gotta evaluate yourself
