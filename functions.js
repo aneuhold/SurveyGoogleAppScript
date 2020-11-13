@@ -1,39 +1,41 @@
 // ----- GRADE MAPPING FUNCTIONS ----- //
 
 function getGradePointFromLetter(letterGrade) {
-  switch (letterGrade) {
-    case 'A+':
-      return 5;
-    case 'A':
-      return 4;
-    case 'B':
-      return 3;
-    case 'C':
-      return 2;
-    case 'D':
-      return 1;
-    default:
-      Logger.log(`Invalid letter grade provided, it was ${letterGrade}`);
-      return 'Invalid letter grade, should be either A+, A, B, C, or D';
+  if (getConfig().grades[letterGrade] === undefined) {
+    Logger.log(`Invalid letter grade provided, it was ${letterGrade}`);
+    return 'Invalid letter grade, should be either A+, A, B, C, or D';
   }
+  return getConfig().grades[letterGrade].value;
 }
 
 function getGradeLetterFromPoint(gradePoint) {
-  const roundedPoint = Math.round(gradePoint);
-  switch (roundedPoint) {
-    case 5:
-      return 'A+';
-    case 4:
-      return 'A';
-    case 3:
-      return 'B';
-    case 2:
-      return 'C';
-    case 1:
-      return 'D';
-    default:
-      return `Invalid grade points, they were ${gradePoint}`;
+  if (typeof gradePoint !== 'number') {
+    return `Invalid grade points, they were ${gradePoint}`;
   }
+
+  // Get all the grade values
+  const gradeEntries = Object.entries(getConfig().grades);
+
+  let letterGradeFound = false;
+  let letterGrade = '';
+  let currentGradeIndex = 0;
+  while (!letterGradeFound && currentGradeIndex < gradeEntries.length) {
+    Logger.log(gradeEntries);
+    const currentLetterGrade = gradeEntries[currentGradeIndex][0];
+    const { maxRange, minRange } = gradeEntries[currentGradeIndex][1];
+
+    if (gradePoint > minRange && gradePoint <= maxRange) {
+      letterGrade = currentLetterGrade;
+      letterGradeFound = true;
+    }
+
+    currentGradeIndex++;
+  }
+
+  if (letterGradeFound) {
+    return letterGrade;
+  }
+  return `Invalid grade points, they were ${gradePoint}`;
 }
 
 // ----- FormItem FUNCTIONS ----- //

@@ -7,7 +7,14 @@
  *  peerQuestions: string[],
  *  title: string,
  *  formId: string,
- *  studentGradingSectionTitle: string
+ *  studentGradingSectionTitle: string,
+ *  grades: {
+ *    [letterGrade: string]: {
+ *      maxRange: Number,
+ *      minRange: Number,
+ *      value: Number
+ *    }
+ *  }
  * } | null}
  */
 
@@ -86,6 +93,46 @@ function populateConfigFromSheet() {
           currentRow++;
         }
       }
+      return;
+    }
+
+    if (namedRange.getName() === 'gradeValues') {
+      const gradeValuesRange = namedRange.getRange();
+      const gradeValues = gradeValuesRange.getValues();
+      config.grades = {};
+
+      // Loop through each grade and assign the value
+      gradeValues.forEach((gradeValueRow) => {
+        // Col 0 is the letter grade, Col 1 is the value
+        const parsedNumber = Number.parseInt(gradeValueRow[1], 10);
+        if (Number.isNaN(parsedNumber)) {
+          throw new Error(`Value for ${gradeValueRow[0]} in gradeValues is not`
+          + ' a number.');
+        }
+        config.grades[gradeValueRow[0]] = {
+          value: parsedNumber,
+        };
+      });
+      return;
+    }
+
+    if (namedRange.getName() === 'gradeRanges') {
+      const gradeRangesRange = namedRange.getRange();
+      const gradeRanges = gradeRangesRange.getValues();
+
+      // Loop through each grade and assign the range
+      gradeRanges.forEach((gradeRangeRow) => {
+        // Col 0 is the letter grade, Col 1 is the range
+        const rangeArr = gradeRangeRow[1].split('-');
+        const parsedMinRange = Number.parseFloat(rangeArr[0]);
+        const parsedMaxRange = Number.parseFloat(rangeArr[1]);
+        if (Number.isNaN(parsedMinRange) || Number.isNaN(parsedMaxRange)) {
+          throw new Error(`Value for ${gradeRangeRow[0]} in gradeRanges is not`
+          + ' a number or incorrectly formatted.');
+        }
+        config.grades[gradeRangeRow[0]].minRange = parsedMinRange;
+        config.grades[gradeRangeRow[0]].maxRange = parsedMaxRange;
+      });
       return;
     }
 
