@@ -86,72 +86,101 @@ function getSummaryOfEachStudent() {
 }
 
 /**
-* Updates the form with groups and team members from the sheet attached to this script.
-* */
+ * Updates the form set in the config with the `formId` with the questions for
+ * each student and group.
+ */
 function updateForm() {
-  // call your form and connect to the drop-down item
   const form = getForm();
-  form.setDescription('This form is to provide information about your team, yourself and each individual in the team. It will only be read by the instructor and grading team.');
+  form.setDescription('This form is to provide information about your team, '
+  + 'yourself and each individual in the team. It will only be read by the '
+  + 'instructor and grading team.');
 
-  // grab the values in the sheet
-  const namesValues = getTeamNamesFromSheet();
-  const studentNames = getStudentNamesFromSheet();
-  const studentASU = getStudentASURITEFromSheet();
-  const teams = []; // array with team names
-  const members = {}; // teamname -> [Teammembers] -- probably could have been done better
+  /**
+   * @type {StudentObject}
+   */
+  const studentsObj = getStudentsObj();
 
-  // go through all rows
-  for (let i = 0; i < namesValues.length; i++) {
-    // if not empty
-    if (namesValues[i][0] !== '') {
-      let included = false;
-      // actually I wanted to do teams.indexOf(namesValues[i][0]) == -1 but it
-      // never worked so I gave up and searched manually if the team is already tehre
-      for (let j = 0; j < teams.length; j++) {
-        if (teams[j] === namesValues[i][0]) {
-          included = true;
-          break;
-        }
-      }
-      if (!included) { // not included add the team
-        members[namesValues[i][0]] = [studentNames[i][0]];
-        teams[teams.length] = namesValues[i][0];
-      } else { // team already there add the team member
-        members[namesValues[i][0]][members[namesValues[i][0]].length] = studentNames[i][0];
-      }
-      Logger.log(members);
-    }
-  }
-
-  // Setup the ASUrite question
-  Logger.log(studentASU);
-  const studentDropDown = form.addListItem()
-    .setTitle('Select your asurite.')
-    .setRequired(true);
-  const studentChoices = [];
-  for (let i = 0; i < studentASU.length; i++) {
-    studentChoices[i] = studentDropDown.createChoice(studentASU[i][0]);
-  }
-  Logger.log(studentChoices);
-  studentDropDown.setChoices(studentChoices);
+  /**
+   * @type {TeamsObject}
+   */
+  const teamsObj = getTeamsObj();
 
   // create multiple choice box which later on holds team names
-  const item = form.addMultipleChoiceItem();
-  item.setTitle('Please choose your team name');
-  const sectTeam = []; // array of sections
-  const teamChoice = []; // array of team choices
-  const details = []; // text box in every section for providing team details
-  const detailsTeamWork = []; // text box in every section for providing team details
+  const teamMultiChoice = form.addMultipleChoiceItem();
+  teamMultiChoice.setTitle('Please choose your team name');
+  const teamSections = []; // array of sections
+  const teamChoices = []; // array of team choices
 
   const grid = [];
-  // now create each section
-  for (let i = 0; i < teams.length; i++) {
-    // add the new section
-    sectTeam[i] = form.addPageBreakItem().setTitle(`Peer review: ${teams[i]}`)
+  // Now create each team's section
+  Object.values(teamsObj).forEach((teamObj, i) => {
+    form.addPageBreakItem().setTitle(`Peer review: ${teamObj.teamName}`)
       // set that at the end of section it should be submitted
       .setGoToPage(FormApp.PageNavigationType.SUBMIT);
     // sets that the choice in multiple choice box decides where to go
-    teamChoice[i] = item.createChoice(teams[i], sectTeam[i]);
+    teamChoices[i] = teamMultiChoice.createChoice(teamObj.teamName, teamSections[i]);
+
+    // Add ASUrite question
+    const studentDropDown = form.addListItem()
+      .setTitle(getConfig().asuIdQuestionTitle)
+      .setRequired(true);
+    const studentChoices = [];
+    const currentTeamAsuIds = teamObj.asuIDs;
+    currentTeamAsuIds.forEach((asuId) => {
+      studentChoices.push(studentDropDown.createChoice(asuId));
+    });
+    Logger.log(studentChoices);
+    studentDropDown.setChoices(studentChoices);
+
+    // Add working with team again question
+    form.addMultipleChoiceItem()
+      .setTitle('If given the choice, would you choose to work with this team again??')
+      .setChoiceValues(['yes', 'no']);
+
+    // Add the additional info textbox
+    form.addParagraphTextItem()
+      .setTitle('Please provide an explanation for your response above.');
+
+    // creating this awful grid thing
+    const gridSection = [];
+    currentTeamAsuIds.forEach((asuId, index) => {
+      const newGridItem = form.addGridItem(); // Crate grid item
+
+      newGridItem.setTitle(createTitleFromStudentName(studentsObj[asuId].fullName))
+        .setRows(getConfig().peerQuestions)
+        .setColumns(['A+', 'A', 'B', 'C', 'D']);
+
+      // Add the additional info for each member
+      form.addParagraphTextItem()
+        .setTitle(`Please provide an explanation for your response above for ${
+          studentsObj[asuId].fullName}`);
+
+      gridSection.push(newGridItem);
+    });
+
+    // Save the grid for this team
+    grid[i] = gridSection;
+  });
+
+  /*
+  for (let i = 0; i < teams.length; i++) {
+    // add the new section
+    teamSections[i] = form.addPageBreakItem().setTitle(`Peer review: ${teams[i]}`)
+      // set that at the end of section it should be submitted
+      .setGoToPage(FormApp.PageNavigationType.SUBMIT);
+    // sets that the choice in multiple choice box decides where to go
+    teamChoices[i] = teamMultiChoice.createChoice(teams[i], teamSections[i]);
+
+    // Add ASUrite question
+    const studentDropDown = form.addListItem()
+      .setTitle(getConfig().asuIdQuestionTitle)
+      .setRequired(true);
+    const studentChoices = [];
+    for (let j = 0; j < studentASU.length; j++) {
+      studentChoices[j] = studentDropDown.createChoice(studentASU[j][0]);
+    }
+    Logger.log(studentChoices);
+    studentDropDown.setChoices(studentChoices);
 
     form.addMultipleChoiceItem()
       .setTitle('If given the choice, would you choose to work with this team again??')
@@ -175,13 +204,9 @@ function updateForm() {
         .setTitle(`Please provide an explanation for your response above for ${members[teams[i]][j]}`);
     }
     grid[i] = gridSection; // save grid
-
-    // Add the additional info textbox
-    // details[i] = form.addParagraphTextItem();
-    // details[i].setTitle('Add details about your grading, did something stand
-    // out in a positive or negative way? Be brief but let me know if something is important.');
   }
+  */
 
   // populate the multiple choice with the array data
-  item.setChoices(teamChoice); // populates the multiple choice one correctly
+  teamMultiChoice.setChoices(teamChoices); // populates the multiple choice one correctly
 }

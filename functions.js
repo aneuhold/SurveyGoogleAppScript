@@ -160,7 +160,7 @@ function getStudentGrades(studentName) {
 * Creates a title or question by swapping the triple question marks with the provided student name.
 * */
 function createTitleFromStudentName(studentName) {
-  const returnStr = studentGradingSectionTitle.replace('???', studentName);
+  const returnStr = getConfig().studentGradingSectionTitle.replace('???', studentName);
   return returnStr;
 }
 
@@ -171,7 +171,7 @@ function createTitleFromStudentName(studentName) {
 * @returns {string} the name of the student within the provided title
 * */
 function getStudentNameFromTitle(title) {
-  const templateTitleParts = studentGradingSectionTitle.split('???');
+  const templateTitleParts = getConfig().studentGradingSectionTitle.split('???');
   let temp = title;
 
   // Remove the parts surrounding the student's name
@@ -330,7 +330,7 @@ function getFormIdMaps(studentsObj) {
   for (let i = 0; i < formItems.length; i++) {
     // Test if the title has the second part of the studentGradingSectionTitle.
     // This seemed like a good enough test for now.
-    if (formItems[i].getTitle().includes(studentGradingSectionTitle.split('???')[1])) {
+    if (formItems[i].getTitle().includes(getConfig().studentGradingSectionTitle.split('???')[1])) {
       const studentName = getStudentNameFromTitle(formItems[i].getTitle());
 
       studentRelatedFormIds[studentName] = {
