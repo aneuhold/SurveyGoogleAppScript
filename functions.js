@@ -81,18 +81,6 @@ function logResponses() {
   }
 }
 
-// ----- Form FUNCTIONS ----- //
-
-/**
- * Gets the form that should be used to update and collect data from once
- * responses are submitted.
- * @returns {GoogleAppsScript.Forms.Form} the form with the ID specified at
- * the beginning of the script.
- */
-function getForm() {
-  return FormApp.openById(config.formID); // ID for the survey
-}
-
 // ----- Sheet FUNCTIONS ----- //
 
 /**

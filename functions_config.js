@@ -99,7 +99,7 @@ function populateConfigFromSheet() {
         config.formTitle = cellValue;
         break;
       case 'formId':
-        config.asuIdQuestionTitle = cellValue;
+        config.formId = cellValue;
         break;
       case 'studentGradingSectionTitle':
         config.studentGradingSectionTitle = cellValue;
@@ -107,4 +107,18 @@ function populateConfigFromSheet() {
       default:
     }
   });
+}
+
+/**
+ * Replaces a config value in the "Config" sheet with the given value.
+ *
+ * @param {string} namedRangeName the name of the Named Range on the "Config"
+ * sheet
+ * @param {string} newValue the new value to replace the current config value
+ * in the named range
+ */
+function editConfigValue(namedRangeName, newValue) {
+  const spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
+  const configRange = spreadSheet.getRangeByName(namedRangeName);
+  configRange.setValue(newValue);
 }
