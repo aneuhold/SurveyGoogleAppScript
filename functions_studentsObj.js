@@ -48,7 +48,7 @@ function getStudentsObj() {
 
     const formItems = getFormItems();
     const asuRiteQuestionFormItem = formItems.find(
-      (item) => item.getTitle() === questionTitles.asuId,
+      (item) => item.getTitle() === getConfig().asuIdQuestionTitle,
     );
     const formIdsMaps = getFormIdMaps(studentsObj);
 

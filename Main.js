@@ -33,7 +33,7 @@ function getSummaryOfEachStudent() {
     // if the student has been graded.
     if (studentGrades.length > 0) {
       // For each thing being graded upon
-      for (let j = 0; j < thingsToGradeStudentsOn.length; j++) {
+      for (let j = 0; j < getConfig().peerQuestions.length; j++) {
         let totalGradePoints = 0;
         let totalGradesGiven = 0;
 
@@ -62,7 +62,7 @@ function getSummaryOfEachStudent() {
       }
     } else {
       // Skip those columns
-      currentCol += thingsToGradeStudentsOn.length;
+      currentCol += getConfig().peerQuestions.length;
     }
 
     // Add the number of students that graded this student to the next column
@@ -167,7 +167,7 @@ function updateForm() {
       Logger.log(members[teams[i]]);
       gridSection[j] = form.addGridItem(); // create grid
       gridSection[j].setTitle(createTitleFromStudentName(members[teams[i]][j]))
-        .setRows(thingsToGradeStudentsOn)
+        .setRows(getConfig().peerQuestions)
         .setColumns(['A+', 'A', 'B', 'C', 'D']);
 
       // Add the additional info for each member

@@ -5,7 +5,7 @@
  * the beginning of the script.
  */
 function getForm() {
-  return FormApp.openById(config.formID); // ID for the survey
+  return FormApp.openById(getConfig().formId); // ID for the survey
 }
 
 /**

@@ -250,9 +250,9 @@ function buildSheetHeaders(sheet) {
   currentCol++;
 
   // Things to grade students on
-  for (let i = 0; i < thingsToGradeStudentsOn.length; i++) {
+  for (let i = 0; i < getConfig().peerQuestions.length; i++) {
     const titleRangeLocation = `${getColCharFromIndex(currentCol)}1`;
-    sheet.getRange(1, currentCol).setValue(thingsToGradeStudentsOn[i]);
+    sheet.getRange(1, currentCol).setValue(getConfig().peerQuestions[i]);
     currentCol++;
   }
 
