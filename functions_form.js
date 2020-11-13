@@ -17,7 +17,7 @@ function createForm() {
   const { formId } = getConfig();
 
   // If a form ID is already specified, do not create a new form.
-  if (formId !== '' && formId !== undefined) {
+  if (typeof formId === 'string' && formId !== '') {
     Logger.log('Form ID is already specified so the new form wasnt created');
     return;
   }

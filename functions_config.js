@@ -98,7 +98,7 @@ function populateConfigFromSheet() {
       case 'title':
         config.formTitle = cellValue;
         break;
-      case 'formId':
+      case 'formID':
         config.formId = cellValue;
         break;
       case 'studentGradingSectionTitle':
