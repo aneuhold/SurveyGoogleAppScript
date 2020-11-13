@@ -296,21 +296,26 @@ function buildSheetHeaders(sheet) {
 }
 
 /**
-* Maps the form IDs of the grading question and comment question to each student
-* ID given the properly filled studentsObj. The studentsObj must have the
-* fullName assigned for this to work properly.
-*
-* This has O(n) time complexity. It makes 2 passes, 1 for the form items and 1 for the studentsObj.
-*
-* @returns {{
-*   gradingFormItemIds: {
-*     [formItemId: string]: string
-*   },
-*   commentFormItemIds: {
-*     [formItemId: string]: string
-*   },
-* }} the completed mapped form IDs, where the values of each formID is the student ASUrite ID.
-* */
+ * Maps the form IDs of the grading question and comment question to each student
+ * ID given the properly filled studentsObj. The studentsObj must have the
+ * fullName assigned for this to work properly.
+ *
+ * This has O(n) time complexity. It makes 2 passes, 1 for the form items and 1 for the studentsObj.
+ *
+ * @returns {{
+ *  gradingFormItemIds: {
+ *    [formItemId: string]: string
+ *  },
+ *  commentFormItemIds: {
+ *    [formItemId: string]: string
+ *  },
+ *  asuIDQuestionItemIds: {
+ *    [teamName: string]: string
+ *  }
+ * }} the completed mapped form IDs, where the values of each formID is the
+ * student ASUrite ID, except where the asuIDQuestionItemIds are defined where
+ * the value is the form item ID of the asurite question for that team
+ */
 function getFormIdMaps(studentsObj) {
   /**
   * This will be mapped like so:
@@ -325,12 +330,33 @@ function getFormIdMaps(studentsObj) {
   * */
   const studentRelatedFormIds = {};
 
-  // Map the studentRelatedFormIds first
+  /**
+   * Maps the form IDs to student IDs (so it reverses the relation, and adds in
+   * the actual ASURite IDs)
+   */
+  const formIdsMaps = {
+    gradingFormItemIds: {},
+    commentFormItemIds: {},
+    asuIDQuestionItemIds: {},
+  };
+
+  // Map the studentRelatedFormIds first and the team ASU ID questions
   const formItems = getFormItems();
+  let currentTeamName = '';
   for (let i = 0; i < formItems.length; i++) {
+    const currentFormTitle = formItems[i].getTitle();
+
+    // Test if the title is the beginning of a team title
+    if (currentFormTitle.includes('Peer review:')) {
+      currentTeamName = currentFormTitle.replace('Peer review: ', '');
+
+    // Test if the title is the asu rite question
+    } else if (currentFormTitle.includes(getConfig().asuIdQuestionTitle)) {
+      formIdsMaps.asuIDQuestionItemIds[currentTeamName] = formItems[i].getId();
+
     // Test if the title has the second part of the studentGradingSectionTitle.
     // This seemed like a good enough test for now.
-    if (formItems[i].getTitle().includes(getConfig().studentGradingSectionTitle.split('???')[1])) {
+    } else if (currentFormTitle.includes(getConfig().studentGradingSectionTitle.split('???')[1])) {
       const studentName = getStudentNameFromTitle(formItems[i].getTitle());
 
       studentRelatedFormIds[studentName] = {
@@ -342,14 +368,6 @@ function getFormIdMaps(studentsObj) {
     }
   }
 
-  /**
-   * Maps the form IDs to student IDs (so it reverses the relation, and adds in
-   * the actual ASURite IDs)
-   */
-  const formIdsMaps = {
-    gradingFormItemIds: {},
-    commentFormItemIds: {},
-  };
   Object.entries(studentsObj).forEach(([key, value]) => {
     if (studentRelatedFormIds[value.fullName] !== undefined) {
       const gradingFormId = studentRelatedFormIds[value.fullName].gradingFormItemId;

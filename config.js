@@ -8,6 +8,8 @@ const questionsToShowOnOutput = {
   end: 0,
 };
 
+const teamQuestionTitle = 'Please choose your team name';
+
 // Different sets of questions for different courses.
 // These need to be declared before the place where they are used below.
 const ser315Questions = [

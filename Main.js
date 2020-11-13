@@ -107,7 +107,7 @@ function updateForm() {
 
   // create multiple choice box which later on holds team names
   const teamMultiChoice = form.addMultipleChoiceItem();
-  teamMultiChoice.setTitle('Please choose your team name');
+  teamMultiChoice.setTitle(teamQuestionTitle);
   const teamSections = []; // array of sections
   const teamChoices = []; // array of team choices
 
@@ -201,7 +201,8 @@ function updateForm() {
 
       // Add the additional info for each member
       form.addParagraphTextItem()
-        .setTitle(`Please provide an explanation for your response above for ${members[teams[i]][j]}`);
+        .setTitle(`Please provide an explanation for your response above for ${
+          members[teams[i]][j]}`);
     }
     grid[i] = gridSection; // save grid
   }

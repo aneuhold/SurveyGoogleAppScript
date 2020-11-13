@@ -146,8 +146,10 @@ function getClassObject() {
   }
 
   const formItems = getFormItems();
-  const asuRiteQuestionFormItem = formItems
-    .find((item) => item.getTitle() === getConfig().asuIdQuestionTitle);
+
+  // Get the team question item
+  const teamQuestionItem = formItems
+    .find((item) => item.getTitle() === teamQuestionTitle);
 
   // Go through the responses for data. Each response corresponds to a completed survey
   const formResponses = getResponses();
@@ -159,8 +161,13 @@ function getClassObject() {
   }
 
   for (let i = 0; i < formResponses.length; i++) {
+    // Find out which team they are on
+    const teamName = formResponses[i].getResponseForItem(teamQuestionItem)
+      .getResponse();
+
     // Get their ASU ID from the completed form
-    const asuIdResponse = formResponses[i].getResponseForItem(asuRiteQuestionFormItem);
+    const asuIdQuestionItemId = formIdsMaps.asuIDQuestionItemIds[teamName];
+    const asuIdResponse = formResponses[i].getResponseForItem(asuIdQuestionItemId);
     const asuId = asuIdResponse.getResponse().trim().toLowerCase();
 
     // If their ASU ID matches one that is in the Teams sheet
@@ -182,7 +189,7 @@ function getClassObject() {
             studentsObj[studentIdBeingGraded].peerGrades
               .push(studentItemResponses[j].getResponse());
 
-            // If the response is one of the comment responses
+          // If the response is one of the comment responses
           } else if (formIdsMaps.commentFormItemIds[responseItemId] !== undefined) {
             const studentIdBeingGraded = formIdsMaps.commentFormItemIds[responseItemId];
             studentsObj[studentIdBeingGraded].peerComments
