@@ -146,6 +146,7 @@ function getClassObject() {
   }
 
   const formItems = getFormItems();
+  const form = getForm();
 
   // Get the team question item
   const teamQuestionItem = formItems
@@ -167,7 +168,8 @@ function getClassObject() {
 
     // Get their ASU ID from the completed form
     const asuIdQuestionItemId = formIdsMaps.asuIDQuestionItemIds[teamName];
-    const asuIdResponse = formResponses[i].getResponseForItem(asuIdQuestionItemId);
+    const asuIdQuestionItem = form.getItemById(asuIdQuestionItemId);
+    const asuIdResponse = formResponses[i].getResponseForItem(asuIdQuestionItem);
     const asuId = asuIdResponse.getResponse().trim().toLowerCase();
 
     // If their ASU ID matches one that is in the Teams sheet

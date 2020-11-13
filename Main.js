@@ -107,14 +107,16 @@ function updateForm() {
 
   // create multiple choice box which later on holds team names
   const teamMultiChoice = form.addMultipleChoiceItem();
-  teamMultiChoice.setTitle(teamQuestionTitle);
+  teamMultiChoice.setTitle(teamQuestionTitle)
+    .setRequired(true);
   const teamSections = []; // array of sections
   const teamChoices = []; // array of team choices
 
   const grid = [];
   // Now create each team's section
   Object.values(teamsObj).forEach((teamObj, i) => {
-    form.addPageBreakItem().setTitle(`Peer review: ${teamObj.teamName}`)
+    teamSections[i] = form.addPageBreakItem()
+      .setTitle(`Peer review: ${teamObj.teamName}`)
       // set that at the end of section it should be submitted
       .setGoToPage(FormApp.PageNavigationType.SUBMIT);
     // sets that the choice in multiple choice box decides where to go
