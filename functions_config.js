@@ -43,6 +43,15 @@ function clearConfig() {
           currentRow++;
         }
       }
+
+    // If they are the grade values, only clear the numbers, not the letter
+    // grades
+    } else if (namedRange.getName() === 'gradeValues'
+    || namedRange.getName() === 'gradeRanges') {
+      const gradeRange = namedRange.getRange();
+      for (let i = 0; i < gradeRange.getNumRows(); i++) {
+        gradeRange.getCell(i + 1, 2).clearContent();
+      }
     } else {
       // Only clear the content, not the formatting
       namedRange.getRange().clearContent();
