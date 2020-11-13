@@ -145,8 +145,9 @@ function updateForm() {
 
     // creating this awful grid thing
     const gridSection = [];
-    currentTeamAsuIds.forEach((asuId, index) => {
-      const newGridItem = form.addGridItem(); // Crate grid item
+    currentTeamAsuIds.forEach((asuId) => {
+      const newGridItem = form.addGridItem()
+        .setRequired(true); // Create grid item
 
       newGridItem.setTitle(createTitleFromStudentName(studentsObj[asuId].fullName))
         .setRows(getConfig().peerQuestions)
@@ -163,52 +164,6 @@ function updateForm() {
     // Save the grid for this team
     grid[i] = gridSection;
   });
-
-  /*
-  for (let i = 0; i < teams.length; i++) {
-    // add the new section
-    teamSections[i] = form.addPageBreakItem().setTitle(`Peer review: ${teams[i]}`)
-      // set that at the end of section it should be submitted
-      .setGoToPage(FormApp.PageNavigationType.SUBMIT);
-    // sets that the choice in multiple choice box decides where to go
-    teamChoices[i] = teamMultiChoice.createChoice(teams[i], teamSections[i]);
-
-    // Add ASUrite question
-    const studentDropDown = form.addListItem()
-      .setTitle(getConfig().asuIdQuestionTitle)
-      .setRequired(true);
-    const studentChoices = [];
-    for (let j = 0; j < studentASU.length; j++) {
-      studentChoices[j] = studentDropDown.createChoice(studentASU[j][0]);
-    }
-    Logger.log(studentChoices);
-    studentDropDown.setChoices(studentChoices);
-
-    form.addMultipleChoiceItem()
-      .setTitle('If given the choice, would you choose to work with this team again??')
-      .setChoiceValues(['yes', 'no']);
-
-    // Add the additional info textbox
-    form.addParagraphTextItem()
-      .setTitle('Please provide an explanation for your response above.');
-
-    // creating this awful grid thing
-    const gridSection = [];
-    for (let j = 0; j < members[teams[i]].length; j++) { // go through all members of team
-      Logger.log(members[teams[i]]);
-      gridSection[j] = form.addGridItem(); // create grid
-      gridSection[j].setTitle(createTitleFromStudentName(members[teams[i]][j]))
-        .setRows(getConfig().peerQuestions)
-        .setColumns(['A+', 'A', 'B', 'C', 'D']);
-
-      // Add the additional info for each member
-      form.addParagraphTextItem()
-        .setTitle(`Please provide an explanation for your response above for ${
-          members[teams[i]][j]}`);
-    }
-    grid[i] = gridSection; // save grid
-  }
-  */
 
   // populate the multiple choice with the array data
   teamMultiChoice.setChoices(teamChoices); // populates the multiple choice one correctly

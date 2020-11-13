@@ -188,8 +188,14 @@ function getClassObject() {
             if (studentsObj[studentIdBeingGraded].peerGrades === undefined) {
               Logger.log(`studentsObj with Id: ${studentIdBeingGraded} doesnt exist`);
             }
-            studentsObj[studentIdBeingGraded].peerGrades
-              .push(studentItemResponses[j].getResponse());
+
+            // If the student is grading themself but it shouldn't count
+            if (studentIdBeingGraded === asuId && !studentsSelfGradeCounts) {
+              Logger.log(`Student with ASU ID ${asuId} self-grade does not count`);
+            } else {
+              studentsObj[studentIdBeingGraded].peerGrades
+                .push(studentItemResponses[j].getResponse());
+            }
 
           // If the response is one of the comment responses
           } else if (formIdsMaps.commentFormItemIds[responseItemId] !== undefined) {

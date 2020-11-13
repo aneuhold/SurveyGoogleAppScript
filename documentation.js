@@ -1,10 +1,10 @@
 /**
  * Backlog as of 11/13/2020:
  *
- * - Include a thing that says “yes” you gotta evaluate yourself
- * - Switch the ABC grade to percentages, so let students choose ABC etc but
- * then map it to 100, 97 etc so the mean can be calculated easily and I can
- * use that easily in my grading sheets
- * - Change the nubmering of the extra questions to be exclusive of the last
+ * - Make it so that a student's grade for themself doesn't contribute towards
+ * their grade.
+ * - Test to see if requiring responses to the grading questions does anything
+ * strange.
+ * - Change the numbering of the extra questions to be exclusive of the last
  * value. This way the user can use no extra questions
  */

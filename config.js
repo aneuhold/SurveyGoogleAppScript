@@ -8,6 +8,8 @@ const questionsToShowOnOutput = {
   end: 0,
 };
 
+const studentsSelfGradeCounts = false;
+
 const teamQuestionTitle = 'Please choose your team name';
 
 // Different sets of questions for different courses.
