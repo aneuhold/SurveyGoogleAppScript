@@ -25,28 +25,7 @@ function clearConfig() {
   const configSheet = getConfigSheet();
   const namedRanges = configSheet.getNamedRanges();
   namedRanges.forEach((namedRange) => {
-    if (namedRange.getName() === 'peerQuestions') {
-      const peerQuestionsRange = namedRange.getRange();
-
-      // Loop through each range and collect the ones that don't have nothing,
-      // or the last separator statement.
-      const numRows = peerQuestionsRange.getHeight();
-      let currentRow = 1;
-      let endFound = false;
-      while (!endFound && currentRow <= numRows) {
-        const currentCell = peerQuestionsRange.getCell(currentRow, 1);
-        if (currentCell.getValue() === ''
-        || currentCell.getValue() === 'Please keep this text here to identify the end of the questions') {
-          endFound = true;
-        } else {
-          currentCell.clearContent();
-          currentRow++;
-        }
-      }
-
-    // If they are the grade values, only clear the numbers, not the letter
-    // grades
-    } else if (namedRange.getName() === 'gradeValues'
+    if (namedRange.getName() === 'gradeValues'
     || namedRange.getName() === 'gradeRanges') {
       const gradeRange = namedRange.getRange();
       for (let i = 0; i < gradeRange.getNumRows(); i++) {
@@ -90,18 +69,12 @@ function populateConfigFromSheet() {
     if (namedRange.getName() === 'peerQuestions') {
       const peerQuestionsRange = namedRange.getRange();
 
-      // Loop through each range and collect the ones that don't have nothing,
-      // or the last separator statement.
+      // Loop through each range and collect the ones that don't have nothing
       const numRows = peerQuestionsRange.getHeight();
-      let currentRow = 1;
-      let endFound = false;
       config.peerQuestions = [];
-      while (!endFound && currentRow <= numRows) {
+      for (let currentRow = 1; currentRow <= numRows; currentRow++) {
         const currentCellValue = peerQuestionsRange.getCell(currentRow, 1).getValue();
-        if (currentCellValue === ''
-        || currentCellValue === 'Please keep this text here to identify the end of the questions') {
-          endFound = true;
-        } else {
+        if (currentCellValue !== '') {
           config.peerQuestions.push(currentCellValue);
           currentRow++;
         }
@@ -209,6 +182,15 @@ function addRowToPeerQuestions() {
   addRowToNamedRange('peerQuestions');
 }
 
+function addRowToGroupQuestions() {
+  addRowToNamedRange('groupQuestions');
+}
+
+/**
+ * Removes a row from the given named range.
+ *
+ * @param {string} namedRangeName the name of the range to remove a row from.
+ */
 function removeRowFromNamedRange(namedRangeName) {
   const spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
   const namedRange = spreadSheet.getRangeByName(namedRangeName);
@@ -221,4 +203,8 @@ function removeRowFromNamedRange(namedRangeName) {
 
 function removeRowFromPeerQuestions() {
   removeRowFromNamedRange('peerQuestions');
+}
+
+function removeRowFromGroupQuestions() {
+  removeRowFromNamedRange('groupQuestions');
 }
