@@ -273,7 +273,7 @@ function buildSheetHeaders(sheet) {
   // Other questions that should be displayed as indicated in config
   const formItems = getFormItems();
   for (let questionIndex = questionsToShowOnOutput.start;
-    questionIndex <= questionsToShowOnOutput.end;
+    questionIndex < questionsToShowOnOutput.end;
     questionIndex++) {
     const formItem = formItems[questionIndex];
     const itemTitle = formItem.getTitle();

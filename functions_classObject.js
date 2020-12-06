@@ -206,7 +206,7 @@ function getClassObject() {
         }
       }
       for (let questionIndex = questionsToShowOnOutput.start;
-        questionIndex <= questionsToShowOnOutput.end;
+        questionIndex < questionsToShowOnOutput.end;
         questionIndex++) {
         const response = studentItemResponses[questionIndex].getResponse();
         if (Array.isArray(response)) {

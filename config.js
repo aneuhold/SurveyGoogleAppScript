@@ -1,8 +1,16 @@
 /**
-* Any extra questions to show for each student on the final grades output.
-* Numbered starting from 0, and ending on the last one that should be included.
-* So the `end` value is inclusive.
-* */
+ * Any extra questions to show for each student on the final grades output.
+ * Numbered starting from 0, and ending on the last one (exclusive).
+ *
+ * For example: If questions 4 - 5 are wanted starting from 0, then the values
+ * would be:
+ * ```
+ * const questionsToShowOnOutput = {
+ *  start: 5,
+ *  end: 6,
+ * };
+ * ```
+ */
 const questionsToShowOnOutput = {
   start: 0,
   end: 0,
