@@ -78,6 +78,10 @@ function getConfig() {
   return config;
 }
 
+/**
+ * Populates the config variable held locally in the script with what is on the
+ * sheet attached to this script.
+ */
 function populateConfigFromSheet() {
   const configSheet = getConfigSheet();
   const namedRanges = configSheet.getNamedRanges();
@@ -177,4 +181,44 @@ function editConfigValue(namedRangeName, newValue) {
   const spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
   const configRange = spreadSheet.getRangeByName(namedRangeName);
   configRange.setValue(newValue);
+}
+
+/**
+ * Adds a single row to the given named range.
+ *
+ * @param {string} namedRangeName the name of the named range to add a row after
+ */
+function addRowToNamedRange(namedRangeName) {
+  const spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
+  const namedRange = spreadSheet.getRangeByName(namedRangeName);
+  const sheet = namedRange.getSheet();
+
+  // Add a row after the last row in the named range
+  const lastRow = namedRange.getLastRow();
+  sheet.insertRowAfter(lastRow);
+
+  // Update the range so it includes the new row
+  const newRange = sheet.getRange(namedRange.getRow(), namedRange.getColumn(),
+    namedRange.getNumRows() + 1, namedRange.getNumColumns());
+
+  // Set the updated range to the named range
+  spreadSheet.setNamedRange(namedRangeName, newRange);
+}
+
+function addRowToPeerQuestions() {
+  addRowToNamedRange('peerQuestions');
+}
+
+function removeRowFromNamedRange(namedRangeName) {
+  const spreadSheet = SpreadsheetApp.getActiveSpreadsheet();
+  const namedRange = spreadSheet.getRangeByName(namedRangeName);
+  const sheet = namedRange.getSheet();
+
+  // Remove the row
+  const lastRow = namedRange.getLastRow();
+  sheet.deleteRow(lastRow);
+}
+
+function removeRowFromPeerQuestions() {
+  removeRowFromNamedRange('peerQuestions');
 }
