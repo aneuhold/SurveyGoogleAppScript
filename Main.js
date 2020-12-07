@@ -131,12 +131,10 @@ function updateForm() {
     currentTeamAsuIds.forEach((asuId) => {
       studentChoices.push(studentDropDown.createChoice(asuId));
     });
-    Logger.log(studentChoices);
     studentDropDown.setChoices(studentChoices);
 
     // Add group questions
     const { groupQuestions } = getConfig();
-    Logger.log(groupQuestions);
     groupQuestions.forEach((groupQuestion) => {
       form.addParagraphTextItem()
         .setTitle(groupQuestion);

@@ -18,7 +18,6 @@ function createForm() {
 
   // If a form ID is already specified, do not create a new form.
   if (typeof formId === 'string' && formId !== '') {
-    Logger.log('Form ID is already specified so the new form wasnt created');
     throw new Error('Form ID already specified in config. Please delete that'
     + 'form ID first before creating a form');
   }

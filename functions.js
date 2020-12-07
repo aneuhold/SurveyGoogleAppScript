@@ -20,7 +20,6 @@ function getGradeLetterFromPoint(gradePoint) {
   let letterGrade = '';
   let currentGradeIndex = 0;
   while (!letterGradeFound && currentGradeIndex < gradeEntries.length) {
-    Logger.log(gradeEntries);
     const currentLetterGrade = gradeEntries[currentGradeIndex][0];
     const { maxRange, minRange } = gradeEntries[currentGradeIndex][1];
 
@@ -78,7 +77,6 @@ function logResponses() {
     // Loop through each ItemResponse
     for (let j = 0; j < itemResponses.length; j++) {
       const userResponse = itemResponses[j].getResponse();
-      Logger.log(userResponse);
     }
   }
 }
