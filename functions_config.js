@@ -77,7 +77,6 @@ function populateConfigFromSheet() {
         const currentCellValue = peerQuestionsRange.getCell(currentRow, 1).getValue();
         if (currentCellValue !== '') {
           config.peerQuestions.push(currentCellValue);
-          currentRow++;
         }
       }
       return;
@@ -93,9 +92,9 @@ function populateConfigFromSheet() {
         const currentCellValue = groupQuestionsRange.getCell(currentRow, 1).getValue();
         if (currentCellValue !== '') {
           config.groupQuestions.push(currentCellValue);
-          currentRow++;
         }
       }
+      Logger.log(config.groupQuestions);
       return;
     }
 

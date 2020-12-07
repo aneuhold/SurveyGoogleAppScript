@@ -136,6 +136,7 @@ function updateForm() {
 
     // Add group questions
     const { groupQuestions } = getConfig();
+    Logger.log(groupQuestions);
     groupQuestions.forEach((groupQuestion) => {
       form.addParagraphTextItem()
         .setTitle(groupQuestion);
