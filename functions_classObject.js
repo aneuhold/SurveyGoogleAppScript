@@ -6,6 +6,7 @@
  *  groupName: string,
  *  completedSurvey: boolean,
  *  peerGrades: string[][],
+ *  groupQuestionAnswers: string[],
  *  otherAnswers: string[]
  * }}
  */
@@ -141,6 +142,7 @@ function getClassObject() {
       completedSurvey: false,
       peerGrades: [],
       peerComments: [],
+      groupQuestionAnswers: [],
       otherAnswers: [],
     };
   }
@@ -181,9 +183,15 @@ function getClassObject() {
         // If the response is not empty
         if (studentItemResponses[j].getResponse() !== null) {
           const responseItemId = studentItemResponses[j].getItem().getId();
+          const itemTitle = studentItemResponses[j].getItem().getTitle();
+
+          // If the response is for one of the group questions
+          if (getConfig().groupQuestions.includes(itemTitle)) {
+            studentsObj[asuId].groupQuestionAnswers
+              .push(studentItemResponses[j].getResponse());
 
           // If the response is one of the grading responses
-          if (formIdsMaps.gradingFormItemIds[responseItemId] !== undefined) {
+          } else if (formIdsMaps.gradingFormItemIds[responseItemId] !== undefined) {
             const studentIdBeingGraded = formIdsMaps.gradingFormItemIds[responseItemId];
             if (studentsObj[studentIdBeingGraded].peerGrades === undefined) {
               Logger.log(`studentsObj with Id: ${studentIdBeingGraded} doesnt exist`);
@@ -205,6 +213,8 @@ function getClassObject() {
           }
         }
       }
+
+      // Get the extra questions if specified in the config.gs file
       for (let questionIndex = questionsToShowOnOutput.start;
         questionIndex < questionsToShowOnOutput.end;
         questionIndex++) {

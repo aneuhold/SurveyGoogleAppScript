@@ -70,12 +70,19 @@ function getSummaryOfEachStudent() {
     currentCol++;
 
     // Add the comments from their peers
-    gradesSheet.getRange(currentStudentRow, currentCol).setValue(student.peerComments.join('\n--------------\n'));
+    gradesSheet.getRange(currentStudentRow, currentCol)
+      .setValue(student.peerComments.join('\n--------------\n'));
     currentCol++;
 
     // Indication if they completed the survey
     gradesSheet.getRange(currentStudentRow, currentCol).setValue(student.completedSurvey);
     currentCol++;
+
+    // Add group answers
+    student.groupQuestionAnswers.forEach((answer) => {
+      gradesSheet.getRange(currentStudentRow, currentCol).setValue(answer);
+      currentCol++;
+    });
 
     // Other questions as enumerated in the config
     for (let answerNum = 0; answerNum < student.otherAnswers.length; answerNum++) {

@@ -268,6 +268,12 @@ function buildSheetHeaders(sheet) {
   sheet.getRange(1, currentCol).setValue('Student completed the survey');
   currentCol++;
 
+  // Add group questions
+  getConfig().groupQuestions.forEach((question) => {
+    sheet.getRange(1, currentCol).setValue(question);
+    currentCol++;
+  });
+
   // Other questions that should be displayed as indicated in config
   const formItems = getFormItems();
   for (let questionIndex = questionsToShowOnOutput.start;
