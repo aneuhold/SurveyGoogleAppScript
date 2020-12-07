@@ -134,6 +134,13 @@ function updateForm() {
     Logger.log(studentChoices);
     studentDropDown.setChoices(studentChoices);
 
+    // Add group questions
+    const { groupQuestions } = getConfig();
+    groupQuestions.forEach((groupQuestion) => {
+      form.addParagraphTextItem()
+        .setTitle(groupQuestion);
+    });
+
     // Add working with team again question
     form.addMultipleChoiceItem()
       .setTitle('If given the choice, would you choose to work with this team again??')

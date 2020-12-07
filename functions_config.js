@@ -5,6 +5,7 @@
  * @type {{
  *  asuIdQuestionTitle: string,
  *  peerQuestions: string[],
+ *  groupQuestions: string[],
  *  title: string,
  *  formId: string,
  *  studentGradingSectionTitle: string,
@@ -82,10 +83,29 @@ function populateConfigFromSheet() {
       return;
     }
 
+    if (namedRange.getName() === 'groupQuestions') {
+      const groupQuestionsRange = namedRange.getRange();
+
+      // Loop through each range and collect the ones that don't have nothing
+      const numRows = groupQuestionsRange.getHeight();
+      config.groupQuestions = [];
+      for (let currentRow = 1; currentRow <= numRows; currentRow++) {
+        const currentCellValue = groupQuestionsRange.getCell(currentRow, 1).getValue();
+        if (currentCellValue !== '') {
+          config.groupQuestions.push(currentCellValue);
+          currentRow++;
+        }
+      }
+      return;
+    }
+
     if (namedRange.getName() === 'gradeValues') {
+      Logger.log('grade values reached');
       const gradeValuesRange = namedRange.getRange();
       const gradeValues = gradeValuesRange.getValues();
-      config.grades = {};
+      if (config.grades === undefined) {
+        config.grades = {};
+      }
 
       // Loop through each grade and assign the value
       gradeValues.forEach((gradeValueRow) => {
@@ -95,9 +115,13 @@ function populateConfigFromSheet() {
           throw new Error(`Value for ${gradeValueRow[0]} in gradeValues is not`
           + ' a number.');
         }
-        config.grades[gradeValueRow[0]] = {
-          value: parsedNumber,
-        };
+        if (config.grades[gradeValueRow[0]] === undefined) {
+          config.grades[gradeValueRow[0]] = {
+            value: parsedNumber,
+          };
+        } else {
+          config.grades[gradeValueRow[0]].value = parsedNumber;
+        }
       });
       return;
     }
@@ -105,6 +129,9 @@ function populateConfigFromSheet() {
     if (namedRange.getName() === 'gradeRanges') {
       const gradeRangesRange = namedRange.getRange();
       const gradeRanges = gradeRangesRange.getValues();
+      if (config.grades === undefined) {
+        config.grades = {};
+      }
 
       // Loop through each grade and assign the range
       gradeRanges.forEach((gradeRangeRow) => {
@@ -116,8 +143,15 @@ function populateConfigFromSheet() {
           throw new Error(`Value for ${gradeRangeRow[0]} in gradeRanges is not`
           + ' a number or incorrectly formatted.');
         }
-        config.grades[gradeRangeRow[0]].minRange = parsedMinRange;
-        config.grades[gradeRangeRow[0]].maxRange = parsedMaxRange;
+        if (config.grades[gradeRangeRow[0]] === undefined) {
+          config.grades[gradeRangeRow[0]] = {
+            minRange: parsedMinRange,
+            maxRange: parsedMaxRange,
+          };
+        } else {
+          config.grades[gradeRangeRow[0]].minRange = parsedMinRange;
+          config.grades[gradeRangeRow[0]].maxRange = parsedMaxRange;
+        }
       });
       return;
     }
